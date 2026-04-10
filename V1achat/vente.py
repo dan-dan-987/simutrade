@@ -115,9 +115,6 @@ valeur_totale = valeur_positions + st.session_state.cash
 st.metric("Cash disponible", f"{st.session_state.cash:,.2f} $")
 st.metric("Valeur totale du portefeuille", f"{valeur_totale:,.2f} $")
 
-# ---------------------------------------------------------
-# Historique des transactions
-# ---------------------------------------------------------
 st.header("Historique des transactions")
 
 if st.session_state.history:
