@@ -24,7 +24,13 @@ def load_data():
 
     data = yf.download(list(tickers.values()), period="5y")["Close"]
     data.columns = tickers.keys()
+
+    # 🔥 Remplir les trous avec la valeur du jour précédent
+    data = data.ffill()
+
+    # Supprimer les colonnes entièrement vides (rare mais possible)
     data = data.dropna(axis=1, how="all")
+
     return data
 
 data = load_data()
@@ -33,7 +39,7 @@ data = load_data()
 # Initialisation du portefeuille
 # ---------------------------------------------------------
 if "cash" not in st.session_state:
-    st.session_state.cash = 10_000  # capital de départ
+    st.session_state.cash = 10_000
 
 if "positions" not in st.session_state:
     st.session_state.positions = {name: 0 for name in data.columns}
