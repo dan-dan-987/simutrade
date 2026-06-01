@@ -4,6 +4,7 @@ import pandas as pd
 URL = "https://qppzcnuysrztxgcaherb.supabase.co"
 KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFwcHpjbnV5c3J6dHhnY2FoZXJiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgwNDc1ODYsImV4cCI6MjA5MzYyMzU4Nn0.MCa5luBCFD3lGiUwQ8RnSvLU_2ENspnbdlzQQnQ1V_A"
 
+
 supabase: Client = create_client(URL, KEY)
 
 
