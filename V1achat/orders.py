@@ -1,7 +1,6 @@
 from db import supabase, get_user_data, save_transaction
 
 
-#  CREATION D'UN ORDRE
 def save_order(user_id, actif, type_ordre, prix_cible, quantite, trailing=False):
     supabase.table("orders").insert({
         "user_id": user_id,
@@ -15,7 +14,6 @@ def save_order(user_id, actif, type_ordre, prix_cible, quantite, trailing=False)
     }).execute()
 
 
-#  RECUPERATION DES ORDRES
 def get_open_orders(user_id):
     res = supabase.table("orders").select("*").eq("user_id", user_id).eq("status", "open").execute()
     return res.data
@@ -26,7 +24,6 @@ def get_order_history(user_id):
     return res.data
 
 
-#  MODIFICATION D'UN ORDRE
 def update_order(order_id, prix_cible, quantite, trailing):
     supabase.table("orders").update({
         "prix_cible": prix_cible,
@@ -39,7 +36,6 @@ def update_order_status(order_id, status):
     supabase.table("orders").update({"status": status}).eq("id", order_id).execute()
 
 
-#  EXECUTION D'UN ORDRE
 def executer_order(order, prix_actuel):
     user_id = order["user_id"]
     actif = order["actif"]
@@ -47,7 +43,7 @@ def executer_order(order, prix_actuel):
 
     cash = get_user_data(user_id)
 
-    # Vente (tous les ordres avancés sont des ventes dans ton système)
+
     save_transaction(
         user_id,
         "Vente",
@@ -60,7 +56,7 @@ def executer_order(order, prix_actuel):
     update_order_status(order["id"], "executed")
 
 
-#  LOGIQUE DU TRAILING STOP PROFESSIONNEL
+
 def check_orders(user_id, prix_actuels):
     orders = get_open_orders(user_id)
 
@@ -68,7 +64,6 @@ def check_orders(user_id, prix_actuels):
         actif = order["actif"]
         prix = prix_actuels[actif]
 
-        # TRAILING STOP
         if order.get("trailing"):
             highest = order.get("highest_price") or prix
 
@@ -85,7 +80,6 @@ def check_orders(user_id, prix_actuels):
                 executer_order(order, prix)
                 continue
 
-        # ORDRES CLASSIQUES
         if order["type"] == "Stop-Loss" and prix <= order["prix_cible"]:
             executer_order(order, prix)
 
